@@ -5,23 +5,42 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js",
-    "lint": "npx standard",
-    "fix": "npx standard --fix",
-    "prepare": "husky"
+    "start": "ts-node app.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky",
+    "dev": "nodemon --exec ts-node app.js",
+    "docker:build": "docker build -t tp4-api .",
+    "docker:run": "docker run -p 3000:3000 tp4-api"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "cors": "2.8.6",
+    "dotenv": "17.4.2",
+    "express": "5.2.1"
   },
   "devDependencies": {
-    "eslint": "^10.3.0",
-    "eslint-config-prettier": "^10.1.8",
-    "husky": "^9.1.7",
-    "nodemon": "^3.1.14",
-    "standard": "^17.1.2"
+    "@commitlint/cli": "21.0.1",
+    "@commitlint/config-conventional": "21.0.1",
+    "@types/express": "5.0.6",
+    "@types/node": "25.9.1",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "10.1.8",
+    "husky": "9.1.7",
+    "lint-staged": "17.0.5",
+    "nodemon": "3.1.14",
+    "prettier": "3.8.3",
+    "standard": "17.1.2",
+    "ts-node": "10.9.2",
+    "typescript": "6.0.3"
   }
 }
