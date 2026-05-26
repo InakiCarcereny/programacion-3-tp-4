@@ -1,4 +1,4 @@
-const Server = require('./core/server')
+const Server = require("./core/server");
 
-const servidor = new Server()
-servidor.listen()
+const servidor = new Server();
+servidor.listen();
