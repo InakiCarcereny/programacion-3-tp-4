@@ -3,11 +3,25 @@ const fs = require("fs").promises;
 const getAlumnoAll = async (req, res) => {
   try {
     const data = await fs.readFile("./data/alumnos.json", "utf8");
-    const alumnos = JSON.parse(data);
+    let alumnos = JSON.parse(data);
+
+    const { apellido, isActive } = req.query;
+
+    if (apellido) {
+      alumnos = alumnos.filter((a) =>
+        a.apellido.toLowerCase().includes(apellido.toLowerCase())
+      );
+    }
+
+    if (isActive !== undefined) {
+      const activo = isActive === "true";
+      alumnos = alumnos.filter((a) => a.isActive === activo);
+    }
 
     return res.status(200).json(alumnos);
   } catch (error) {
     console.log(error);
+
     return res
       .status(500)
       .json({ error: "No se puedieron obtener los datos de los alumnos" });
