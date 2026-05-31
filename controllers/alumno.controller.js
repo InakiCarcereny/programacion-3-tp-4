@@ -53,4 +53,41 @@ const getAlumnoById = async (req, res) => {
   }
 };
 
-module.exports = { getAlumnoAll, getAlumnoById };
+const updateAlumno = async (req, res) => {
+  try {
+    const { legajo } = req.params;
+
+    const data = await fs.readFile("./data/alumnos.json", "utf8");
+
+    const alumnos = JSON.parse(data);
+
+    const indiceAlumno = alumnos.findIndex((a) => a.legajo === Number(legajo));
+
+    if (indiceAlumno === -1) {
+      return res.status(404).json({
+        msg: `No existe el alumno con legajo ${legajo}`,
+      });
+    }
+
+    const alumnoActual = alumnos[indiceAlumno];
+
+    alumnos[indiceAlumno] = {
+      ...alumnoActual,
+      ...req.body,
+      legajo: alumnoActual.legajo,
+      modificacion: new Date().toISOString().split("T")[0],
+    };
+
+    await fs.writeFile("./data/alumnos.json", JSON.stringify(alumnos, null, 2));
+
+    return res.status(200).json(alumnos[indiceAlumno]);
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      error: "No se pudo actualizar",
+    });
+  }
+};
+
+module.exports = { getAlumnoAll, getAlumnoById, updateAlumno };
