@@ -1,12 +1,12 @@
 [
   {
     "legajo": 10001,
-    "nombre": "Mora",
-    "apellido": "García",
-    "email": "m.garcia@facultad.edu.ar",
+    "nombre": "Mora Actualizada",
+    "apellido": "Garcia Lopez",
+    "email": "nuevo@facultad.edu.ar",
     "fechaAlta": "2026-03-02",
-    "modificacion": "2026-03-02",
-    "isActive": true
+    "modificacion": "2026-05-31",
+    "isActive": false
   },
   {
     "legajo": 10002,
