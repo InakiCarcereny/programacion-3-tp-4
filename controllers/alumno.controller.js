@@ -57,47 +57,45 @@ const getAlumnoById = async (req, res) => {
 const postAlumno = async (req, res) => {
   try {
     const { nombre, apellido, email } = req.body;
-
     const data = await fs.readFile("./data/alumnos.json", "utf8");
-
     const alumnos = JSON.parse(data);
 
-    console.log('Se pareseo infomracion a "alumnos"');
+    const emailExiste = alumnos.some((a) => a.email === email);
+    if (emailExiste) {
+      return res.status(409).json({
+        error: `Ya existe un alumno registrado con el email ${email}.`,
+      });
+    }
 
     const legajos = alumnos.map((alumno) => alumno.legajo);
-
     const newLegajo = Math.max(...legajos) + 1;
 
-    console.log("Nuevo legajo generado");
-
-    const nuevoAlumno = new AlumnoModel(newLegajo, nombre, apellido, email);
-
-    console.log(nuevoAlumno);
+    let nuevoAlumno;
+    try {
+      nuevoAlumno = new AlumnoModel(newLegajo, nombre, apellido, email);
+    } catch (validationError) {
+      return res.status(400).json({
+        error: validationError.message,
+      });
+    }
 
     const alumnoNuevo = nuevoAlumno.getAllAttributes();
-
     alumnos.push(alumnoNuevo);
-
-    console.log(nuevoAlumno.getAllAttributes());
 
     await fs.writeFile(
       "./data/alumnos.json",
-
       JSON.stringify(alumnos, null, 2),
-
       "utf8"
     );
 
-    return res.status(200).json({
-      msg: `Se agrego al sistema el alumno nuevo con el legajo n: ${newLegajo}`,
-
-      alumnoNuevo: alumnoNuevo,
+    return res.status(201).json({
+      msg: `Se agregó al sistema el alumno nuevo con el legajo n°: ${newLegajo}`,
+      alumnoNuevo,
     });
   } catch (error) {
     console.log("Error real:", error);
-
     return res.status(500).json({
-      error: `No se puedo dar de alta el nuevo alumno`,
+      error: "No se pudo dar de alta el nuevo alumno.",
     });
   }
 };
