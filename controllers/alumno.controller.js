@@ -102,4 +102,44 @@ const postAlumno = async (req, res) => {
   }
 };
 
-module.exports = { getAlumnoAll, getAlumnoById, postAlumno };
+const deleteAlumnoById = async (req, res) => {
+  const { legajo } = req.params;
+  try {
+    const data = await fs.readFile("./data/alumnos.json", "utf8");
+    const alumnos = JSON.parse(data);
+
+
+    const index = alumnos.findIndex((a) => a.legajo === Number(legajo));
+
+    if (index === -1) {
+      return res
+        .status(404)
+        .json({ msg: `No existe el alumno con el legajo ${legajo}` });
+    }
+
+    const alumnoEliminado = alumnos[index];
+
+    alumnos.splice(index, 1);
+
+    await fs.writeFile(
+      "./data/alumnos.json",
+      JSON.stringify(alumnos, null, 2),
+      "utf8"
+    );
+
+    console.log(`Alumno con legajo ${legajo} eliminado`);
+
+    return res.status(200).json({
+      msg: `Se eliminó correctamente el alumno con legajo ${legajo}`,
+      alumnoEliminado: alumnoEliminado,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      error: `No se pudo eliminar el alumno con legajo ${legajo}`,
+    });
+  }
+};
+
+module.exports = { getAlumnoAll, getAlumnoById, postAlumno, deleteAlumnoById };
