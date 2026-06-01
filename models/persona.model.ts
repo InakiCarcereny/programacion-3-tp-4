@@ -35,7 +35,11 @@ export class PersonaModel {
 	}
 
 	// devolver todos los atributos en un objeto literal/plano (es como un JSON)
-	public getAllAttributes(): object {
+	public getAllAttributes(): {
+    nombre: string;
+    apellido: string;
+    email: string;
+  } {
 		return {
 			nombre: this.nombre,
 			apellido: this.apellido,
