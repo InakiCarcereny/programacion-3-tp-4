@@ -9,6 +9,7 @@ const {
   getAlumnoById,
   postAlumno,
   deleteAlumnoById,
+  updateAlumno,
 } = require("../controllers/alumno.controller");
 
 const rutas = Router();
@@ -17,5 +18,6 @@ rutas.get("/", getAlumnoAll);
 rutas.get("/:legajo", getAlumnoById);
 rutas.post("/", validatePostAlumno, postAlumno);
 rutas.delete("/:legajo", deleteAlumnoById);
+rutas.put("/:legajo", updateAlumno);
 
 module.exports = rutas;
