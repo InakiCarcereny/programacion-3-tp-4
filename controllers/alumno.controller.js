@@ -108,7 +108,6 @@ const deleteAlumnoById = async (req, res) => {
     const data = await fs.readFile("./data/alumnos.json", "utf8");
     const alumnos = JSON.parse(data);
 
-
     const index = alumnos.findIndex((a) => a.legajo === Number(legajo));
 
     if (index === -1) {
