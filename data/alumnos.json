@@ -223,5 +223,14 @@
     "fechaAlta": "2026-05-14",
     "modificacion": "2026-05-14",
     "isActive": true
+  },
+  {
+    "nombre": "Inaki",
+    "apellido": "Carcereny",
+    "email": "inaki@facultad.edu.ar",
+    "legajo": 10026,
+    "fechaAlta": "2026-06-01",
+    "modificacion": "2026-06-01",
+    "isActive": true
   }
 ]
