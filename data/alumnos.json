@@ -223,14 +223,5 @@
     "fechaAlta": "2026-05-14",
     "modificacion": "2026-05-14",
     "isActive": true
-  },
-  {
-    "legajo": 10026,
-    "nombre": "Valentin",
-    "apellido": "De pascale",
-    "email": "valen@facultad.edu.ar",
-    "fechaAlta": "2026-05-30",
-    "modificacion": "2026-05-30",
-    "isActive": true
   }
 ]
