@@ -1,11 +1,11 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  },
-  "javascript.format.enable": false,
-  "prettier.trailingComma": "none",
-  "prettier.semi": false,
-  "prettier.singleQuote": true
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit"
+	},
+	"eslint.validate": ["javascript"],
+	"files.eol": "\n",
+	"editor.tabSize": 2,
+	"editor.insertSpaces": true
 }

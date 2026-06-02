@@ -1,12 +1,24 @@
-const { Router } = require('express')
+const { Router } = require("express");
+
+const {
+  validatePostAlumno,
+  validatePutAlumno,
+} = require("../middlewares/alumno-validator.middleware.js");
+
 const {
   getAlumnoAll,
-  getAlumnoById
-} = require('../controllers/alumno.controller')
+  getAlumnoById,
+  postAlumno,
+  deleteAlumnoById,
+  updateAlumno,
+} = require("../controllers/alumno.controller");
 
-const rutas = Router()
+const rutas = Router();
 
-rutas.get('/', getAlumnoAll)
-rutas.get('/:legajo', getAlumnoById)
+rutas.get("/", getAlumnoAll);
+rutas.get("/:legajo", getAlumnoById);
+rutas.post("/", validatePostAlumno, postAlumno);
+rutas.delete("/:legajo", deleteAlumnoById);
+rutas.put("/:legajo", validatePutAlumno, updateAlumno);
 
-module.exports = rutas
+module.exports = rutas;
