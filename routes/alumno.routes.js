@@ -2,6 +2,7 @@ const { Router } = require("express");
 
 const {
   validatePostAlumno,
+  validatePutAlumno,
 } = require("../middlewares/alumno-validator.middleware.js");
 
 const {
@@ -18,6 +19,6 @@ rutas.get("/", getAlumnoAll);
 rutas.get("/:legajo", getAlumnoById);
 rutas.post("/", validatePostAlumno, postAlumno);
 rutas.delete("/:legajo", deleteAlumnoById);
-rutas.put("/:legajo", updateAlumno);
+rutas.put("/:legajo", validatePutAlumno, updateAlumno);
 
 module.exports = rutas;
