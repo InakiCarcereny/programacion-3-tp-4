@@ -305,7 +305,7 @@ const getAlumnoById = async (req, res) => {
 };
 ```
 
-**`postAlumno()`:** Crea un nuevo alumno a partir de los datos recibidos en el body (`nombre`, `apellido`, `email`). Lee `alumnos.json`, obtiene todos los legajos existentes y genera un nuevo legajo tomando el máximo y sumándole `1`. Instancia la clase `AlumnoModel` con los datos y el legajo generado, obtiene todos sus atributos con `getAllAttributes()`, lo agrega al array y sobreescribe el archivo. Responde con `200` y los datos del alumno creado. En caso de error responde con `500`.
+**`postAlumno()`:** Crea un nuevo alumno a partir de los datos recibidos en el body (`nombre`, `apellido`, `email`). Lee `alumnos.json` y verifica que no exista un alumno con el mismo email; si hay duplicado responde con `409`. Obtiene todos los legajos existentes y genera un nuevo legajo tomando el máximo y sumándole `1`. Instancia la clase `AlumnoModel` con los datos y el legajo generado; si los datos son inválidos responde con `400`. Obtiene todos sus atributos con `getAllAttributes()`, lo agrega al array y sobreescribe el archivo. Responde con `201` y los datos del alumno creado. En caso de error inesperado responde con `500`.
 
 ```js
 const postAlumno = async (req, res) => {
@@ -313,28 +313,43 @@ const postAlumno = async (req, res) => {
     const { nombre, apellido, email } = req.body;
     const data = await fs.readFile("./data/alumnos.json", "utf8");
     const alumnos = JSON.parse(data);
-    console.log('Se parseó información a "alumnos"');
+
+    const emailExiste = alumnos.some((a) => a.email === email);
+    if (emailExiste) {
+      return res.status(409).json({
+        error: `Ya existe un alumno registrado con el email ${email}.`,
+      });
+    }
+
     const legajos = alumnos.map((alumno) => alumno.legajo);
     const newLegajo = Math.max(...legajos) + 1;
-    console.log("Nuevo legajo generado");
-    const nuevoAlumno = new AlumnoModel(newLegajo, nombre, apellido, email);
-    console.log(nuevoAlumno);
+
+    let nuevoAlumno;
+    try {
+      nuevoAlumno = new AlumnoModel(newLegajo, nombre, apellido, email);
+    } catch (validationError) {
+      return res.status(400).json({
+        error: validationError.message,
+      });
+    }
+
     const alumnoNuevo = nuevoAlumno.getAllAttributes();
     alumnos.push(alumnoNuevo);
-    console.log(nuevoAlumno.getAllAttributes());
+
     await fs.writeFile(
       "./data/alumnos.json",
       JSON.stringify(alumnos, null, 2),
       "utf8"
     );
-    return res.status(200).json({
-      msg: `Se agregó al sistema el alumno nuevo con el legajo n: ${newLegajo}`,
-      alumnoNuevo: alumnoNuevo,
+
+    return res.status(201).json({
+      msg: `Se agregó al sistema el alumno nuevo con el legajo n°: ${newLegajo}`,
+      alumnoNuevo,
     });
   } catch (error) {
     console.log("Error real:", error);
     return res.status(500).json({
-      error: `No se pudo dar de alta el nuevo alumno`,
+      error: "No se pudo dar de alta el nuevo alumno.",
     });
   }
 };
@@ -492,6 +507,39 @@ export class AlumnoModel extends PersonaModel {
   }
 }
 ```
+---
+
+## Documentación con Postman
+
+[Ver documentación completa en Postman](https://documenter.getpostman.com/view/50197693/2sBXwnusXu)
+
+### GET /alumnos
+![GET /alumnos 200](docs/get-alumnos-200.png)
+![GET /alumnos 400](docs/get-alumnos-400.png)
+
+### GET /alumnos?apellido=:apellido
+![GET /alumnos query apellido 200](docs/get-alumnos-query-apellido.png)
+
+### GET /alumnos?isActive=:isActive
+![GET /alumnos query isActive 200](docs/get-alumnos-query-isActive.png)
+
+### GET /alumnos/:legajo
+![GET /alumnos/:legajo 200](docs/get-alumnos-by-id-200.png)
+![GET /alumnos/:legajo 404](docs/get-alumnos-by-id-404.png)
+
+### POST /alumnos
+![POST /alumnos 201](docs/post-alumnos-201.png)
+![POST /alumnos 400](docs/post-alumnos-400.png)
+![POST /alumnos 409](docs/post-alumnos-409.png)
+
+### PUT /alumnos/:legajo
+![PUT /alumnos/:legajo 200](docs/put-alumnos-200.png)
+![PUT /alumnos/:legajo 404](docs/put-alumnos-404.png)
+
+### DELETE /alumnos/:legajo
+![DELETE /alumnos/:legajo 200](docs/delete-alumnos-200.png)
+![DELETE /alumnos/:legajo 404](docs/delete-alumnos-404.png)
+
 ---
 
 ## Estructura archivos JSON
